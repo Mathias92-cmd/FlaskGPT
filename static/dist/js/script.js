@@ -7,3 +7,9 @@ function cloneAnswerBlock(){
     clone.classList.remove("hidden");
     return clone.querySelector(".message");
 }
+
+function addToLog(message) {
+    const answerBlock = cloneAnswerBlock();
+    answerBlock.innerText = message;
+    return answerBlock;
+}
