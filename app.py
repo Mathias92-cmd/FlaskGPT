@@ -8,16 +8,28 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def home():
     return render_template('index.html')
 
-def build_conversation_dict(messages: list) -> list[dict]:
+def build_conversation_dict(msgs: list) -> list[dict]:
     return [
-        {"role" : "user" if i % 2 == 0 else "assistant" , "content":message}
-        for i , message in enumerate(messages)
+        {"role": "user" if i % 2 == 0 else "assistant", "content": message}
+        for i, message in enumerate(msgs)
     ]
 
+def event_stream(conv: list[dict]) -> str:
+    response = openai.ChatCompletion.acreate(
+        model="gpt-3.5-turbo",
+        messages=conv,
+        stream=True
+    )
+    for response_line in response:
+        text = response_line.choices[0].delta.get('content', '')
+        if len(text):
+            yield text
+
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1' , port=5000)
+    conversation = build_conversation_dict(msgs=["Bonjour comment ça va ?", "Ça va et toi?"])
+    for line in event_stream(conversation):
+        print(line)
