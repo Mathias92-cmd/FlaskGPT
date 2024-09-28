@@ -13,3 +13,8 @@ function addToLog(message) {
     answerBlock.innerText = message;
     return answerBlock;
 }
+
+function getChatHistory() {
+    const messageBlocks = document.querySelectorAll(".message:not(#chat-template.message)")
+    return Array.from(messageBlocks).map(block => block.innerHTML)
+}
