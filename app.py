@@ -18,16 +18,17 @@ def build_conversation_dict(msgs: list) -> list[dict]:
         for i, message in enumerate(msgs)
     ]
 
-def event_stream(conv: list[dict]) -> str:
-    response = openai.ChatCompletion.acreate(
+async def event_stream(conv: list[dict]) -> str:
+    response = await openai.ChatCompletion.acreate(
         model="gpt-3.5-turbo",
         messages=conv,
         stream=True
     )
-    for response_line in response:
+    async for response_line in response:
         text = response_line.choices[0].delta.get('content', '')
         if len(text):
             yield text
+
 
 if __name__ == '__main__':
     conversation = build_conversation_dict(msgs=["Bonjour comment ça va ?", "Ça va et toi?"])
