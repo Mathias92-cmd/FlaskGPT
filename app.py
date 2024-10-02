@@ -29,7 +29,7 @@ async def event_stream(conv: list[dict]) -> str:
         if len(text):
             yield text
 
-
+#methode main
 if __name__ == '__main__':
     conversation = build_conversation_dict(msgs=["Bonjour comment ça va ?", "Ça va et toi?"])
     for line in event_stream(conversation):
